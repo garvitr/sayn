@@ -22,3 +22,9 @@ def login(request):
         else:
             return JsonResponse({'message': 'Invalid Username/Password'}, status=500)
     return render(request, 'progress/login.html')
+
+def dashboard(request):
+    return render(request, 'progress/dashboard.html')
+
+def newuser(request):
+    return render(request,'progress/newuser.html')
