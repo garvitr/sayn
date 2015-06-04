@@ -9,6 +9,7 @@
 nav ul a,
 nav .brand-logo {
   color: #ffffff;
+  margin-left:25px ;
 }
 
 p {
@@ -62,3 +63,17 @@ footer.page-footer {
   top: 12px;
   right: 10px;
 }
+
+main {
+  padding-left: 280px;
+}
+
+@media only screen and (max-width : 992px) {
+  main {
+      padding-left: 0;
+    }
+  }
+
+  #user ul li {display: inline ;}
+
+  .title { font-size: 25px ;}

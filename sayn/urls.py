@@ -10,4 +10,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index),
     url(r'^login$', views.login),
+    url(r'^dashboard$', views.dashboard),
+    url(r'^dashboard/user/new$',views.newuser)
 )
