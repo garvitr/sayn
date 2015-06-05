@@ -27,74 +27,72 @@
     <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
     <main>
         <div class="row">
-        <form class="col s12">
+        <form method="POST" action="/dashboard/user/new" class="col s12">
           <div class="row">
             <div class="input-field col s6">
-              <input id="first_name" type="text" class="validate">
+              <input id="first_name" name="first_name" type="text" class="validate" required>
               <label for="first_name">First Name</label>
             </div>
             <div class="input-field col s6">
-              <input id="last_name" type="text" class="validate">
+              <input id="last_name" name="last_name" type="text" class="validate" required>
               <label for="last_name">Last Name</label>
             </div>
           </div>
           
           <div class="row">
             <div class="input-field col s12">
-              <input id="password" type="password" class="validate">
+              <input id="password" name="password" type="password" class="validate" required>
               <label for="password">Password</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s12">
-              <input id="email" type="email" class="validate">
+              <input id="email" name="email" type="email" class="validate" required>
               <label for="email">Email</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s12">
-            <select>
+            <select required>
               <option value="" disabled selected>Option</option>
-              <option value="1">Indian Red Cross</option>
-              <option value="2">Pakistan Red Cross</option>
+              {% for society in societies %}
+              <option name="society" value="{{ society.id }}">{{ society.name }}</option>
+              {% endfor %}
             </select>
             <label>National Society</label>
             </div>
             <div class="input-field col s12">
-              <input id="position" type="text" class="validate">
+              <input id="position" name="position" type="text" class="validate" required>
               <label for="position">Postion in NS</label>
             </div>
           </div>
           <div class="row">
            <div class="input-field col s6">
-            <select>
+            <select required>
               <option value="" disabled selected>Option</option>
-              <option value="1">Observer</option>
-              <option value="2">Member</option>
+              <option name="role" value="Observer">Observer</option>
+              <option name="role" value="Member">Member</option>
             </select>
             <label>Role in SAYN</label>
           </div>
             <div class="input-field col s6">
-            <select>
+            <select required>
               <option value="" disabled selected>Option</option>
-              <option value="1">Male</option>
-              <option value="2">Female</option>
+              <option name="gender" value="M">Male</option>
+              <option name="gender" value="F">Female</option>
             </select>
             <label>Gender</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field col s6">
-              <input id="contact" type="text" pattern="\+?1?\d{9,15}$" title="Please enter a valid contact number" class="validate">
+              <input name="contact" id="contact" type="text" pattern="\+?1?\d{9,15}$" title="Please enter a valid contact number" class="validate" required>
               <label for="contact">Contact Number</label>
             </div>
           </div>
-
-
-            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-                <i class="mdi-content-send right"></i>
-            </button>
-        
+          <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+            <i class="mdi-content-send right"></i>
+          </button>
         </form>
         </div>
     </main>

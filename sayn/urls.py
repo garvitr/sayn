@@ -11,5 +11,5 @@ urlpatterns = patterns('',
     url(r'^$', views.index),
     url(r'^login$', views.login),
     url(r'^dashboard$', views.dashboard),
-    url(r'^dashboard/user/new$',views.newuser)
+    url(r'^dashboard/user/new$',views.newuser),
 )
