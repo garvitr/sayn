@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.contrib import auth
-from progress.models import CustomUser
+from progress.models import CustomUser, Society
 
 # Create your views here.
 
@@ -23,8 +23,43 @@ def login(request):
             return JsonResponse({'message': 'Invalid Username/Password'}, status=500)
     return render(request, 'progress/login.html')
 
-def dashboard(request):
+def dashboard(request): 
     return render(request, 'progress/dashboard.html')
 
 def newuser(request):
-    return render(request,'progress/newuser.html')
+    if request.method == "POST":
+        first_name = request.POST.get('first_name', '')
+        last_name = request.POST.get('last_name', '')
+        password = request.POST.get('password', '')
+        email = request.POST.get('email', '')
+        society =  request.POST.get('society', '')
+        position =  request.POST.get('position', '')
+        role =  request.POST.get('role', '')
+        gender =  request.POST.get('gender', '')
+        contact =  request.POST.get('contact', '')
+        date_of_birth = request.POST.get('date_of_birth', '')
+        nominated_on = request.POST.get('nominated_on', '')
+        nominated_through = request.POST.get('nominated_through', '')
+
+        s = Society.objects.get(pk=society)
+
+        user = CustomUser.object.create(
+            first_name=first_name,
+            last_name=last_name,    
+            password=password,
+            email=email,
+            society=s,
+            position=position,
+            role=role,
+            gender=gender.
+            contact_number=contact,
+            date_of_birth=dob,
+            nominated_on=nominated_on,
+            nominated_through=nominated_through
+        )
+
+        user.save()
+        return HttpResponseRedirect('/dashboard', {'success', 'User Created Successfully'})
+    else:
+        societies = Society.objects.all()
+        return render(request,'progress/newuser.html', {'societies': societies})
