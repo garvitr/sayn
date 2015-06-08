@@ -101,14 +101,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('F', 'Female'),
     )
 
-    society = models.OneToOneField(Society)
+    ROLE = (
+        ('observer', 'Observer'),
+        ('member', 'Member'),
+    )
+
+    society = models.ForeignKey(Society)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     position = models.CharField(max_length=100)
     gender = models.CharField(max_length=1, choices=GENDER)
     date_of_birth = models.DateField()
-    role = models.CharField(max_length=20)
+    role = models.CharField(max_length=20, choices=ROLE)
     contact_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Contact number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     contact_number = models.CharField(validators=[contact_regex], max_length=15)
     nominated_on = models.DateField()

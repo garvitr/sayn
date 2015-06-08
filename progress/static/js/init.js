@@ -34,6 +34,11 @@
       event.preventDefault();
     });
 
+    $('.datepicker').pickadate({
+      selectMonths: true,
+        selectYears: 80,
+    });
+
   }); // end of document ready
 })(jQuery); // end of jQuery name space
 
