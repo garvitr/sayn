@@ -95,6 +95,9 @@ class Society(models.Model):
     def __str__(self):
         return self.name
 
+    def get_contact_name(self):
+        return "{0} {1}".format(self.contact_firstname, self.contact_lastname)
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     GENDER = (
         ('M', 'Male'),

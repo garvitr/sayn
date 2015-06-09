@@ -1,0 +1,29 @@
+{% extends "progress/dashboard.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<ul class="collapsible popout" data-collapsible="accordion">
+  {% for society in societies %}
+  <li>
+    <div class="collapsible-header">
+      <p><span class="list-name red-text">{{ society.name }}</span>
+        <span class="right">
+            <a class="red-text" href="/dashboard/society/{{ society.id }}/edit"><i class="mdi-content-create tiny"></i></a>
+            <a class="red-text" href="/dashboard/user?society={{ society.id }}"><i class="mdi-action-account-child tiny"></i></a></span><br>
+          </span>
+        <span class="list-property red-text text-lighten-1">{{ society.get_contact_name }}</span><span class="list-property red-text text-lighten-1">{{ society.contact_email }}</span>
+      </p>
+    </div>
+    <div class="collapsible-body">
+      <p>Remaining Details Here</p>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block action-btn %}
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+  <a href="/dashboard/society/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
+</div>
+{% endblock %}

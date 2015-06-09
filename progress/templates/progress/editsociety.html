@@ -1,0 +1,38 @@
+{% extends "progress/dashboard.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block main %}
+<form method="POST" action="/dashboard/society/{{ id }}/edit" class="col s12">
+  <div class="row">
+    <div class="input-field col s12">
+      {{ form.name }}
+      <label for="{{ form.name.id_for_label }}">{{form.name.label}}</label>
+    </div>
+  </div>
+  <div class="row">
+    {% csrf_token %}
+    <div class="input-field col s6">
+      {{ form.contact_firstname }}
+      <label for="{{ form.contact_firstname.id_for_label }}">{{form.contact_firstname.label}}</label>
+    </div>
+    <div class="input-field col s6">
+      {{ form.contact_lastname }}
+      <label for="{{ form.contact_lastname.id_for_label }}">{{form.contact_lastname.label}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s6">
+      {{ form.contact_position }}
+      <label for="{{ form.contact_position.id_for_label }}">{{form.contact_position.label}}</label>
+    </div>
+    <div class="input-field col s6">
+      {{ form.contact_email }}
+      <label for="{{ form.contact_email.id_for_label }}">{{form.contact_email.label}}</label>
+    </div>
+  </div>
+  <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+    <i class="mdi-content-send right"></i>
+  </button>
+</form>
+{% endblock %}

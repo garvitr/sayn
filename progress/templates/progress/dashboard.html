@@ -4,66 +4,28 @@
 <head>
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-  <title>SAYN DASHBOARD</title>
+  <title>{% block title %}{% endblock %} - SAYN</title>
 
   <!-- CSS  -->
   <link href="{% static "css/materialize.css" %}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="{% static "css/style.css" %}" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-    <nav class="red" role="navigation">
-        <div class="nav-wrapper container">
-            <a id="logo-container" href="#" class="brand-logo">Dashboard</a>
-            <ul class="right"><ul id="nav-mobile" class="right hide-on-med-and-down"> 
-                <li><a href="#">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <ul id="slide-out" class="side-nav fixed">
-        <li><a href="#!">USERS</a></li>
-        <li><a href="#!">TASKS</a></li>
-    </ul>
-    <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
-
-    <main>
+    <header class="dashboard">
+      {% include "progress/header.html" with title=title %}
+    </header>
+    <main class="dashboard">
+      <div class="container">
         <div class="row">
-            <div class="col s12 m8 ">
-              
-                <ul class="collection">
-                    <li class="collection-item">
-                        <span class="title"> Name :</span>
-                        <ul>
-                            <li>Date Of Birth :</li> 
-                            <li>Postion in NS:</li>
-                            <li>National Society :</li>
-                            <li>Gender : </li>
-                            <li>Role in SAYN : </li>
-                            <li>Email Address : </li>
-                            <li>Contact No. : </li>
-                            <li>Nomination On : </li>
-
-                        </ul>
-                        </li>
-
-                    
-                    </li>
-                    
-                </ul>
-
+            <div class="col s12 m10">
+              {% block main %}{% endblock %}
             </div>
+          </div>
+          {% block action-btn %}
+          {% endblock %}
         </div>
     </main>
-    
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a href="/dashboard/user/new" class="btn-floating btn-large waves-effect waves-light red ">
-        <i class="mdi-content-add"></i>
-        </a>
-    </div>
-        
-
-
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{% static "js/jquery-2.1.1.min.js" %}"></script>
     <script src="{% static "js/materialize.js" %}"></script>
     <script src="{% static "js/init.js" %}"></script>
 </body>

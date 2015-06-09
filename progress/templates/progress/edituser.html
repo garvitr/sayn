@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block main %}
-<form method="POST" action="/dashboard/user/new" class="col s12">
+<form method="POST" action="/dashboard/user/{{ id }}/edit" class="col s12">
   <div class="row">
     {% csrf_token %}
     <div class="input-field col s6">
@@ -16,11 +16,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="input-field col s6">
-      {{ form.password }}
-      <label for="{{ form.password.id_for_label }}">{{form.password.label}}</label>
-    </div>
-    <div class="input-field col s6">
+    <div class="input-field col s12">
       {{ form.date_of_birth }}
       <label for="{{ form.date_of_birth.id_for_label }}">{{form.date_of_birth.label}}</label>
     </div>

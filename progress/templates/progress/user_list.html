@@ -1,0 +1,29 @@
+{% extends "progress/dashboard.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<ul class="collapsible popout" data-collapsible="accordion">
+  {% for user in users %}
+  <li>
+    <div class="collapsible-header">
+      <p><span class="list-name red-text">{{ user.get_full_name }}</span>
+        <span class="right">
+            <a class="red-text" href="/dashboard/user/{{ user.id }}/edit"><i class="mdi-content-create tiny"></i></a>
+            <a class="red-text" href="/dashboard/task?user={{ user.id }}"><i class="mdi-editor-format-list-numbered tiny"></i></a></span><br>
+          </span>
+        <span class="list-property red-text text-lighten-1">{{ user.position }}</span><span class="list-property red-text text-lighten-1">{{ user.role }}</span>
+      </p>
+    </div>
+    <div class="collapsible-body">
+      <p>Remaining Details Here</p>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block action-btn %}
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+  <a href="/dashboard/user/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
+</div>
+{% endblock %}
