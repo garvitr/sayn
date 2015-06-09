@@ -141,3 +141,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         return "{0} {1}".format(self.first_name, self.last_name)
+
+class Task(models.Model):
+    user = models.ForeignKey(CustomUser)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=500)
+    assigned_on = models.DateField(auto_now=True)
+    status = models.BooleanField(default=False, null=False)
+    approved = models.BooleanField()
+
+    def _str_(self):
+        return self.name
