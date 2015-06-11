@@ -1,6 +1,6 @@
 from django import forms
-from django.forms import DateField, EmailInput, PasswordInput, Select, TextInput
-from progress.models import CustomUser, Society
+from django.forms import DateField, EmailInput, PasswordInput, Select, TextInput, BooleanField
+from progress.models import CustomUser, Society, Task
 from progress.widgets import CustomDateInput
 
 class RegistrationForm(forms.ModelForm):
@@ -50,4 +50,20 @@ class SocietyForm(forms.ModelForm):
             'contact_lastname': 'Contact Lastname',
             'contact_position': 'Contact Position',
             'contact_email': 'Contact Email'
+        }
+
+class TaskForm(forms.ModelForm):
+    assigned_on = DateField(input_formats=['%d %B, %Y'], widget=CustomDateInput(attrs={'class': 'datepicker'}, format='%d %B, %Y'))
+
+    class Meta:
+        model = Task
+        exclude = ['user', 'approved']
+
+        labels = {
+            'name':'Task name',
+            'user':'User name',
+            'description':'Tasks description',
+            'assigned_on': 'Tasks Assigned on',
+            'status': 'Completed?',
+            'approved':'Tasks approved'
         }

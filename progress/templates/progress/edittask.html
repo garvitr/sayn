@@ -1,0 +1,42 @@
+{% extends "progress/dashboard.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block main %}
+<form method="POST" action="/dashboard/task/{{ id }}/edit" class="col s12">
+  <div class="row">
+    {% csrf_token %}
+    <div class="input-field col s12">
+      {{ form.name }}
+      <label for="{{ form.name.id_for_label }}">{{form.name.label}}</label>
+    </div>
+  </div>
+  <!-- <div class="row">
+    <div class="input-field col s12">
+      {{ form.user }}
+      <label for="{{ form.user.id_for_label }}">{{form.user.label}}</label>
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="input-field col s12">
+      {{ form.description }}
+      <label for="{{ form.description.id_for_label }}">{{form.description.label}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      {{ form.assigned_on }}
+      <label for="{{ form.assigned_on.id_for_label }}">{{form.assigned_on.label}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
+      {{ form.status}}
+      <label for="{{ form.status.id_for_label }}">{{form.status.label}}</label>
+    </div>
+  </div>
+  <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+    <i class="mdi-content-send right"></i>
+  </button>
+</form>
+{% endblock %}

@@ -146,9 +146,15 @@ class Task(models.Model):
     user = models.ForeignKey(CustomUser)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
-    assigned_on = models.DateField(auto_now=True)
+    assigned_on = models.DateField()
     status = models.BooleanField(default=False, null=False)
-    approved = models.BooleanField()
+    approved = models.BooleanField(default=False, null=False)
 
     def _str_(self):
         return self.name
+
+    def get_description(self):
+        return self.description 
+
+    def get_assigned_on(self):
+        return self.assigned_on
