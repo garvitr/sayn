@@ -1,0 +1,28 @@
+{% extends "progress/dashboard.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<ul class="collapsible popout" data-collapsible="accordion">
+  {% for task in tasks %}
+  <li>
+    <div class="collapsible-header">
+      <p><span class="list-name red-text">{{ task.name }}</span>
+        <span class="right">
+            <a class="red-text" href="/dashboard/task/{{ task.id }}/edit"><i class="mdi-content-create tiny"></i></a></span><br>
+          </span>
+        <span class="list-property red-text text-lighten-1">{{ task.get_description }}</span><span class="list-property red-text text-lighten-1">{{ task.get_assigned_on }}</span>
+      </p>
+    </div>
+    <div class="collapsible-body">
+      <p>Remaining Details Here</p>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block action-btn %}
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+  <a href="/dashboard/task/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
+</div>
+{% endblock %}
