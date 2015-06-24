@@ -129,6 +129,10 @@ a.button-collapse.top-nav.full {
   padding-right: 5px;
 }
 
+.list-property:before {
+  content: " » ";
+}
+
 @media only screen and (max-width : 600px) {
   a.button-collapse.top-nav {
     left: 0;
@@ -140,4 +144,12 @@ a.button-collapse.top-nav.full {
   .collapsible-header {
     height: 6rem;
   }
+}
+
+.list-content ul {
+  padding: 15px;
+}
+
+.btn {
+  z-index: 0;
 }

@@ -3,15 +3,17 @@
 {% block title %}{{ title }}{% endblock %}
 {% block main %}
 <ul class="collapsible popout" data-collapsible="accordion">
-  {% for user in users %}
+  {% for user in filter %}
   <li>
     <div class="collapsible-header">
       <p><span class="list-name red-text">{{ user.get_full_name }}</span>
+        {% if curr_user.is_staff or user == curr_user %}
         <span class="right">
             <a class="red-text" href="/dashboard/user/{{ user.id }}/edit"><i class="mdi-content-create tiny"></i></a>
-            <a class="red-text" href="/dashboard/task?user={{ user.id }}"><i class="mdi-editor-format-list-numbered tiny"></i></a></span><br>
-          </span>
-        <span class="list-property red-text text-lighten-1">{{ user.position }}</span><span class="list-property red-text text-lighten-1">{{ user.role }}</span>
+            <a class="red-text" href="/dashboard/task?user={{ user.id }}"><i class="mdi-editor-format-list-numbered tiny"></i></a></span>
+        {% endif %}
+        <br>
+        <span class="list-property red-text text-lighten-1">{{ user.society }}</span><span class="list-property red-text text-lighten-1">{{ user.role|title }}</span>
       </p>
     </div>
     <div class="collapsible-body">
@@ -22,8 +24,19 @@
 </ul>
 {% endblock %}
 
+{% block filter %}
+<form method="GET" action="">
+  {{ filter.form.as_p }}
+  <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+    <i class="mdi-content-send right"></i>
+  </button>
+</form>
+{% endblock %}
+
 {% block action-btn %}
+{% if user.is_staff %}
 <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
   <a href="/dashboard/user/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
 </div>
+{% endif %}
 {% endblock %}

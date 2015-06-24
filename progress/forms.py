@@ -54,6 +54,7 @@ class SocietyForm(forms.ModelForm):
 
 class TaskForm(forms.ModelForm):
     assigned_on = DateField(input_formats=['%d %B, %Y'], widget=CustomDateInput(attrs={'class': 'datepicker'}, format='%d %B, %Y'))
+    completed_on = DateField(input_formats=['%d %B, %Y'], widget=CustomDateInput(attrs={'class': 'datepicker'}, format='%d %B, %Y'), required=False)
 
     class Meta:
         model = Task
@@ -61,9 +62,9 @@ class TaskForm(forms.ModelForm):
 
         labels = {
             'name':'Task name',
-            'user':'User name',
-            'description':'Tasks description',
-            'assigned_on': 'Tasks Assigned on',
-            'status': 'Completed?',
-            'approved':'Tasks approved'
+            'description':'Task description',
+            'assigned_on': 'Task Assigned On',
+            'completed_on': 'Task Completed On',
+            'status': 'Task Status',
+            'approved':'Approve Task'
         }

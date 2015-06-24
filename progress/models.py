@@ -142,19 +142,30 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return "{0} {1}".format(self.first_name, self.last_name)
 
+    def __str__(self):
+        return self.get_full_name()
+
 class Task(models.Model):
+    STATUS = (
+        (0, 'Not Started'),
+        (1, 'In Progress'),
+        (2, 'Completed'),
+        (3, 'Cancelled'),
+    )
+
     user = models.ForeignKey(CustomUser)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     assigned_on = models.DateField()
-    status = models.BooleanField(default=False, null=False)
+    completed_on = models.DateField(blank=True, null=True)
+    status = models.IntegerField(choices=STATUS)
     approved = models.BooleanField(default=False, null=False)
 
     def _str_(self):
         return self.name
 
     def get_description(self):
-        return self.description 
+        return self.description
 
     def get_assigned_on(self):
         return self.assigned_on

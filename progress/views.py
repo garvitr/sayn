@@ -3,6 +3,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
+from progress.filters import CustomUserFilter, TaskAdminFilter, TaskFilter
 from progress.forms import RegistrationForm, SocietyForm, UserEditForm , TaskForm
 from progress.models import CustomUser, Society , Task
 
@@ -13,6 +14,8 @@ def index(request):
 
 def login(request):
     # if user is logged in then redirect to the dashboard
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/dashboard')
 
     if request.method == "POST":
         email = request.POST.get('email', '')
@@ -32,15 +35,12 @@ def logout(request):
 
 @login_required
 def dashboard(request):
-    return HttpResponseRedirect('/dashboard/user')
+    return HttpResponseRedirect('/dashboard/task')
 
 @login_required
 def user(request):
-    if request.GET and request.GET['society']:
-        users = CustomUser.objects.filter(society=request.GET['society'])
-    else:
-        users = CustomUser.objects.all()
-    return render(request, 'progress/user_list.html', {'users': users, 'title': 'Users'})
+    filter = CustomUserFilter(request.GET, queryset=CustomUser.objects.all())
+    return render(request, 'progress/user_list.html', {'filter': filter, 'title': 'Users', 'curr_user': request.user})
 
 @login_required
 def newuser(request):
@@ -76,7 +76,7 @@ def edituser(request, id=None):
 
 @login_required
 def society(request):
-    societies = Society.objects.all()
+    societies = Society.objects.all().order_by('name')
     return render(request, 'progress/society_list.html', {'societies': societies, 'title': 'Societies'})
 
 @login_required
@@ -109,8 +109,11 @@ def editsociety(request, id=None):
 
 @login_required
 def task(request):
-    tasks = Task.objects.all()
-    return render(request, 'progress/tasks_list.html', {'tasks': tasks, 'title': 'Task'})
+    if request.user.is_staff:
+        filter = TaskAdminFilter(request.GET, queryset=Task.objects.all())
+    else:
+        filter = TaskFilter(request.GET, queryset=Task.objects.filter(user=request.user))
+    return render(request, 'progress/tasks_list.html', {'filter': filter, 'title': 'Task'})
 
 @login_required
 def newtask(request):
@@ -122,7 +125,7 @@ def newtask(request):
             instance.save()
             return HttpResponseRedirect('/dashboard/task', {'success': 'Task Added'})
         else:
-            return render(request, 'progress/newtask.html', {'form': form, 'title': 'Task'})    
+            return render(request, 'progress/newtask.html', {'form': form, 'title': 'Task'})
     else:
         form = TaskForm()
         return render(request, 'progress/newtask.html', {'form': form, 'title': 'Task'})

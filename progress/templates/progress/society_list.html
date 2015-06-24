@@ -7,15 +7,23 @@
   <li>
     <div class="collapsible-header">
       <p><span class="list-name red-text">{{ society.name }}</span>
+        {% if user.is_staff or user.society == society %}
         <span class="right">
             <a class="red-text" href="/dashboard/society/{{ society.id }}/edit"><i class="mdi-content-create tiny"></i></a>
-            <a class="red-text" href="/dashboard/user?society={{ society.id }}"><i class="mdi-action-account-child tiny"></i></a></span><br>
-          </span>
-        <span class="list-property red-text text-lighten-1">{{ society.get_contact_name }}</span><span class="list-property red-text text-lighten-1">{{ society.contact_email }}</span>
+            <a class="red-text" href="/dashboard/user?society={{ society.id }}"><i class="mdi-action-account-child tiny"></i></a></span>
+        {% endif %}
+        <br>
+        {% for user in society.customuser_set.all %}<span class="list-property red-text text-lighten-1">{{ user.get_full_name }}</span>{% endfor %}
       </p>
     </div>
-    <div class="collapsible-body">
-      <p>Remaining Details Here</p>
+    <div class="collapsible-body list-content">
+      <p>
+        <span class="red-text text-darken-1">Contact Person in National Society</span><br>
+        <span class="red-text text-lighten-2">
+          {{ society.get_contact_name }}<br>
+          {{ society.contact_email }}
+        </span>
+      </p>
     </div>
   </li>
   {% endfor %}
@@ -23,7 +31,9 @@
 {% endblock %}
 
 {% block action-btn %}
+{% if user.is_staff %}
 <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
   <a href="/dashboard/society/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
 </div>
+{% endif %}
 {% endblock %}

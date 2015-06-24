@@ -1,0 +1,36 @@
+import django_filters
+from django_filters import DateRangeFilter
+from progress.models import CustomUser, Task
+from progress.widgets import CustomDateInput
+
+class CustomUserFilter(django_filters.FilterSet):
+    class Meta:
+        model = CustomUser
+        fields = {
+            'society': ['exact'],
+            'role': ['exact'],
+        }
+
+class TaskFilter(django_filters.FilterSet):
+    assigned_on = DateRangeFilter()
+    completed_on = DateRangeFilter()
+
+    class Meta:
+        model = Task
+        fields = [
+            'assigned_on',
+            'completed_on',
+            'status',
+            'approved',
+        ]
+
+class TaskAdminFilter(TaskFilter):
+    class Meta:
+        model = Task
+        fields = [
+            'assigned_on',
+            'completed_on',
+            'status',
+            'approved',
+            'user',
+        ]

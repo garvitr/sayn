@@ -3,22 +3,34 @@
 {% block title %}{{ title }}{% endblock %}
 {% block main %}
 <ul class="collapsible popout" data-collapsible="accordion">
-  {% for task in tasks %}
+  {% for task in filter %}
   <li>
     <div class="collapsible-header">
       <p><span class="list-name red-text">{{ task.name }}</span>
         <span class="right">
             <a class="red-text" href="/dashboard/task/{{ task.id }}/edit"><i class="mdi-content-create tiny"></i></a></span><br>
-          </span>
-        <span class="list-property red-text text-lighten-1">{{ task.get_description }}</span><span class="list-property red-text text-lighten-1">{{ task.get_assigned_on }}</span>
+        <span class="list-property red-text text-lighten-1">Assigned On: {{ task.get_assigned_on }}</span>
+        <span class="list-property red-text text-lighten-1">Status: {{ task.get_status_display }}</span>
+        {% if task.status == 2 %}
+        <span class="list-property red-text text-lighten-1">Completed On: {{ task.completed_on }}</span>
+        {% endif %}
       </p>
     </div>
     <div class="collapsible-body">
-      <p>Remaining Details Here</p>
+      <p>{{ task.description }}</p>
     </div>
   </li>
   {% endfor %}
 </ul>
+{% endblock %}
+
+{% block filter %}
+  <form action="" method="GET">
+    {{ filter.form.as_p }}
+    <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+      <i class="mdi-content-send right"></i>
+    </button>
+  </form>
 {% endblock %}
 
 {% block action-btn %}

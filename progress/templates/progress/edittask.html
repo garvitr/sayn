@@ -25,14 +25,20 @@
   </div>
   <div class="row">
     <div class="input-field col s12">
+      {{ form.status}}
+      <label for="{{ form.status.id_for_label }}">{{form.status.label}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-field col s12">
       {{ form.assigned_on }}
       <label for="{{ form.assigned_on.id_for_label }}">{{form.assigned_on.label}}</label>
     </div>
   </div>
   <div class="row">
     <div class="input-field col s12">
-      {{ form.status}}
-      <label for="{{ form.status.id_for_label }}">{{form.status.label}}</label>
+      {{ form.completed_on }}
+      <label for="{{ form.completed_on.id_for_label }}">{{form.completed_on.label}}</label>
     </div>
   </div>
   <button class="btn waves-effect waves-light" type="submit" name="action">Submit

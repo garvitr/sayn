@@ -15,7 +15,11 @@
     <div class="nav-wrapper container">
       <a id="logo-container" href="#" class="brand-logo">SAYN</a>
       <ul class="right">
+        {% if user.is_authenticated %}
+        <li><a href="/dashboard">Dashboard</a></li>
+        {% else %}
         <li><a href="/login">Login</a></li>
+        {% endif %}
       </ul>
     </div>
   </nav>

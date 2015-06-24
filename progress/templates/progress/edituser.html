@@ -63,12 +63,14 @@
       <label for="{{ form.nominated_through.id_for_label }}">{{form.nominated_through.label}}</label>
     </div>
   </div>
+  {% if user.is_staff %}
   <div class="row">
     <div class="input-field col s12">
       {{ form.is_staff }}
       <label for="{{ form.is_staff.id_for_label }}">{{ form.is_staff.label }}</label>
     </div>
   </div>
+  {% endif %}
   <button class="btn waves-effect waves-light" type="submit" name="action">Submit
     <i class="mdi-content-send right"></i>
   </button>

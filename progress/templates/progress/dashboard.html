@@ -17,10 +17,13 @@
     <main class="dashboard">
       <div class="container">
         <div class="row">
-            <div class="col s12 m10">
-              {% block main %}{% endblock %}
-            </div>
+          <div class="col s12 m3">
+            {% block filter %}{% endblock %}
           </div>
+          <div class="col s12 m9">
+            {% block main %}{% endblock %}
+          </div>
+        </div>
           {% block action-btn %}
           {% endblock %}
         </div>
