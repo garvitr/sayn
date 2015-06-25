@@ -1,4 +1,5 @@
 {% extends "progress/dashboard.html" %}
+{% load app_filter %}
 
 {% block title %}{{ title }}{% endblock %}
 {% block main %}
@@ -7,8 +8,12 @@
   <li>
     <div class="collapsible-header">
       <p><span class="list-name red-text">{{ task.name }}</span>
+        {% if task.user == user or user|has_group:"SC" %}
         <span class="right">
-            <a class="red-text" href="/dashboard/task/{{ task.id }}/edit"><i class="mdi-content-create tiny"></i></a></span><br>
+            <a class="red-text" href="/dashboard/task/{{ task.id }}/edit"><i class="mdi-content-create tiny"></i></a>
+        </span>
+        {% endif %}
+        <br>
         <span class="list-property red-text text-lighten-1">Assigned On: {{ task.get_assigned_on }}</span>
         <span class="list-property red-text text-lighten-1">Status: {{ task.get_status_display }}</span>
         {% if task.status == 2 %}

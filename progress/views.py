@@ -39,40 +39,47 @@ def dashboard(request):
 
 @login_required
 def user(request):
-    filter = CustomUserFilter(request.GET, queryset=CustomUser.objects.all())
+    filter = CustomUserFilter(request.GET, queryset=CustomUser.objects.all().order_by('first_name', 'last_name'))
     return render(request, 'progress/user_list.html', {'filter': filter, 'title': 'Users', 'curr_user': request.user})
 
 @login_required
 def newuser(request):
-    if request.method == "POST":
-        form = RegistrationForm(request.POST)
+    group = request.user.groups.get()
+    if group.pk == 1:
+        if request.method == "POST":
+            form = RegistrationForm(request.POST)
 
-        if form.is_valid():
-            # Save the User
-            instance = form.save(commit=False)
-            instance.password = make_password(form.cleaned_data['password'])
-            instance.save()
-            return HttpResponseRedirect('/dashboard/user', {'success', 'User Created Successfully'})
+            if form.is_valid():
+                # Save the User
+                instance = form.save(commit=False)
+                instance.password = make_password(form.cleaned_data['password'])
+                instance.save()
+                return HttpResponseRedirect('/dashboard/user', {'success', 'User Created Successfully'})
+            else:
+                return render(request, 'progress/newuser.html', {'form': form, 'title': 'Users'})
         else:
-            return render(request, 'progress/newuser.html', {'form': form, 'title': 'Users'})
+            form = RegistrationForm()
+            return render(request,'progress/newuser.html', {'form': form, 'title': 'Users'})
     else:
-        form = RegistrationForm()
-        return render(request,'progress/newuser.html', {'form': form, 'title': 'Users'})
+        return HttpResponseRedirect('/dashboard/user')
 
 @login_required
 def edituser(request, id=None):
     user = CustomUser.objects.get(id=id)
-    if request.method == "POST":
-        form = UserEditForm(request.POST, instance=user)
+    group = request.user.groups.get()
+    if group.pk == 1 or user.pk == request.user.pk:
+        if request.method == "POST":
+            form = UserEditForm(request.POST, instance=user)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/user', {'success': 'User Updated'})
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect('/dashboard/user', {'success': 'User Updated'})
+            else:
+                return render(request, 'progress/edituser.html', {'id': user.id, 'form': form, 'title': 'Users'})
         else:
-            return render(request, 'progress/edituser.html', {'id': user.id, 'form': form, 'title': 'Users'})
-    else:
-        form = UserEditForm(instance=user)
-        return render(request,'progress/edituser.html', {'id': user.id, 'form': form, 'title': 'Users'})
+            form = UserEditForm(instance=user)
+            return render(request,'progress/edituser.html', {'id': user.id, 'form': form, 'title': 'Users'})
+    return HttpResponseRedirect('/dashboard/user')
 
 @login_required
 def society(request):
@@ -81,35 +88,45 @@ def society(request):
 
 @login_required
 def newsociety(request):
-    if request.method == "POST":
-        form = SocietyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/society', {'success': 'Society Added'})
+    group = request.user.groups.get()
+
+    if group.pk == 1:
+        if request.method == "POST":
+            form = SocietyForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect('/dashboard/society', {'success': 'Society Added'})
+            else:
+                return render(request, 'progress/newsociety.html', {'form': form, 'title': 'Societies'})
         else:
+            form = SocietyForm()
             return render(request, 'progress/newsociety.html', {'form': form, 'title': 'Societies'})
-    else:
-        form = SocietyForm()
-        return render(request, 'progress/newsociety.html', {'form': form, 'title': 'Societies'})
+    return HttpResponseRedirect('/dashboard/society')
 
 @login_required
 def editsociety(request, id=None):
     society = Society.objects.get(id=id)
-    if request.method == "POST":
-        form = SocietyForm(request.POST, instance=society)
+    group = request.user.groups.get()
 
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/society', {'success': 'Society Updated'})
+    if group.pk == 1 or request.user.society == society:
+        if request.method == "POST":
+            form = SocietyForm(request.POST, instance=society)
+
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect('/dashboard/society', {'success': 'Society Updated'})
+            else:
+                return render(request, 'progress/editsociety.html', {'id': society.id, 'form': form, 'title': 'Societies'})
         else:
-            return render(request, 'progress/editsociety.html', {'id': society.id, 'form': form, 'title': 'Societies'})
-    else:
-        form = SocietyForm(instance=society)
-        return render(request,'progress/editsociety.html', {'id': society.id, 'form': form, 'title': 'Societies'})
+            form = SocietyForm(instance=society)
+            return render(request,'progress/editsociety.html', {'id': society.id, 'form': form, 'title': 'Societies'})
+    return HttpResponseRedirect('/dashboard/society')
 
 @login_required
 def task(request):
-    if request.user.is_staff:
+    group = request.user.groups.get()
+
+    if group.id == 1 or group.id == 2:
         filter = TaskAdminFilter(request.GET, queryset=Task.objects.all())
     else:
         filter = TaskFilter(request.GET, queryset=Task.objects.filter(user=request.user))
@@ -134,14 +151,18 @@ def newtask(request):
 @login_required
 def edittask(request, id=None):
     task = Task.objects.get(id=id)
-    if request.method == "POST":
-        form = TaskForm(request.POST, instance=task)
+    group = request.user.groups.get()
 
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/dashboard/task', {'success': 'Task Updated'})
+    if group.pk == 1 or request.user == task.user:
+        if request.method == "POST":
+            form = TaskForm(request.POST, instance=task)
+
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect('/dashboard/task', {'success': 'Task Updated'})
+            else:
+                return render(request, 'progress/edittask.html', {'id': task.id, 'form': form, 'title': 'Task'})
         else:
-            return render(request, 'progress/edittask.html', {'id': task.id, 'form': form, 'title': 'Task'})
-    else:
-        form = TaskForm(instance=task)
-        return render(request,'progress/edittask.html', {'id': task.id, 'form': form, 'title': 'Task'})
+            form = TaskForm(instance=task)
+            return render(request,'progress/edittask.html', {'id': task.id, 'form': form, 'title': 'Task'})
+    return HttpResponseRedirect('/dashboard')

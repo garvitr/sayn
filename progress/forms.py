@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import Group
 from django.forms import DateField, EmailInput, PasswordInput, Select, TextInput, BooleanField
 from progress.models import CustomUser, Society, Task
 from progress.widgets import CustomDateInput
@@ -6,6 +7,7 @@ from progress.widgets import CustomDateInput
 class RegistrationForm(forms.ModelForm):
     date_of_birth = DateField(input_formats=['%d %B, %Y'], widget=CustomDateInput(attrs={'class': 'datepicker'}, format='%d %B, %Y'))
     nominated_on = DateField(input_formats=['%d %B, %Y'], widget=CustomDateInput(attrs={'class': 'datepicker'}, format='%d %B, %Y'))
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=True)
 
     class Meta:
         model = CustomUser
@@ -35,10 +37,37 @@ class RegistrationForm(forms.ModelForm):
             'society': 'Society',
         }
 
+    def save(self, commit=True):
+        instance = forms.ModelForm.save(self, False)
+        old_save_m2m = self.save_m2m
+
+        def save_m2m():
+            old_save_m2m()
+            instance.groups.clear()
+            instance.groups.add(self.cleaned_data['group'])
+
+        self.save_m2m = save_m2m
+
+        if commit:
+            instance.save()
+            self.save_m2m()
+
+        return instance
+
+
 class UserEditForm(RegistrationForm):
     class Meta:
         model = CustomUser
         exclude = ['is_active', 'password']
+
+    def __init__(self, *args, **kwargs):
+        if 'instance' in kwargs:
+            initial = kwargs.setdefault('initial', {})
+            try:
+                initial['group'] = kwargs['instance'].groups.get()
+            except:
+                pass
+        super(UserEditForm, self).__init__(*args, **kwargs)
 
 class SocietyForm(forms.ModelForm):
     class Meta:
