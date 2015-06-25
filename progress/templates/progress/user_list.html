@@ -8,7 +8,7 @@
   <li>
     <div class="collapsible-header">
       <p><span class="list-name red-text">{{ user.get_full_name }}</span>
-        {% if curr_user.is_staff or user == curr_user %}
+        {% if curr_user|has_group:"SC" or user == curr_user %}
         <span class="right">
             <a class="red-text" href="/dashboard/user/{{ user.id }}/edit"><i class="mdi-content-create tiny"></i></a>
             <a class="red-text" href="/dashboard/task?user={{ user.id }}"><i class="mdi-editor-format-list-numbered tiny"></i></a></span>
