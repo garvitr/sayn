@@ -6,10 +6,11 @@ from progress.widgets import CustomDateInput
 class CustomUserFilter(django_filters.FilterSet):
     class Meta:
         model = CustomUser
-        fields = {
-            'society': ['exact'],
-            'role': ['exact'],
-        }
+        fields = [
+            'society',
+            'role',
+            'is_active',
+        ]
 
 class TaskFilter(django_filters.FilterSet):
     assigned_on = DateRangeFilter()

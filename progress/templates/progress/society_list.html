@@ -35,6 +35,29 @@
 {% if user|has_group:"SC" %}
 <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
   <a href="/dashboard/society/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
+  <ul>
+    <li><a class="btn-floating blue modal-trigger" href="#print"><i class="material-icons">print</i></a></li>
+  </ul>
+</div>
+{% else %}
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+  <a href="#print" class="btn-floating btn-large waves-effect waves-light blue modal-trigger"><i class="material-icons">print</i></a>
 </div>
 {% endif %}
+
+<div id="print" class="modal">
+  <div class="modal-content">
+    <p><strong>Please select the columns you want to print</strong></p>
+    <form action="/dashboard/society/print" method="POST">
+      {% csrf_token %}
+      {% for field in fields %}
+      <p>
+        <input type="checkbox" name="{{ field }}" id="{{ field }}" />
+        <label for="{{ field }}">{{ field }}</label>
+      </p>
+      {% endfor %}
+      <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+    </form>
+  </div>
+</div>
 {% endblock %}

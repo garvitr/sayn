@@ -40,7 +40,8 @@ def dashboard(request):
 @login_required
 def user(request):
     filter = CustomUserFilter(request.GET, queryset=CustomUser.objects.all().order_by('first_name', 'last_name'))
-    return render(request, 'progress/user_list.html', {'filter': filter, 'title': 'Users', 'curr_user': request.user})
+    fields = request.user._meta.get_all_field_names()
+    return render(request, 'progress/user_list.html', {'filter': filter, 'title': 'Users', 'curr_user': request.user, 'fields': fields})
 
 @login_required
 def newuser(request):
@@ -82,9 +83,20 @@ def edituser(request, id=None):
     return HttpResponseRedirect('/dashboard/user')
 
 @login_required
+def printuser(request):
+    group = request.user.groups.get()
+    filter = CustomUserFilter(request.GET, queryset=CustomUser.objects.all().order_by('first_name', 'last_name'))
+    fields = request.POST.dict()
+    del fields['action']
+    del fields['csrfmiddlewaretoken']
+    return render(request, 'progress/printuser.html', {'filter': filter, 'fields': fields})
+
+@login_required
 def society(request):
     societies = Society.objects.all().order_by('name')
-    return render(request, 'progress/society_list.html', {'societies': societies, 'title': 'Societies'})
+    s = Society()
+    fields = s.fields()
+    return render(request, 'progress/society_list.html', {'societies': societies, 'title': 'Societies', 'fields': fields})
 
 @login_required
 def newsociety(request):
@@ -123,6 +135,15 @@ def editsociety(request, id=None):
     return HttpResponseRedirect('/dashboard/society')
 
 @login_required
+def printsociety(request):
+    societies = Society.objects.all().order_by('name')
+    fields = request.POST.dict()
+    del fields['action']
+    del fields['csrfmiddlewaretoken']
+    print(fields)
+    return render(request, 'progress/printsociety.html', {'filter': societies, 'fields': fields})
+
+@login_required
 def task(request):
     group = request.user.groups.get()
 
@@ -130,7 +151,10 @@ def task(request):
         filter = TaskAdminFilter(request.GET, queryset=Task.objects.all())
     else:
         filter = TaskFilter(request.GET, queryset=Task.objects.filter(user=request.user))
-    return render(request, 'progress/tasks_list.html', {'filter': filter, 'title': 'Task'})
+
+    t = Task()
+    fields = t.fields()
+    return render(request, 'progress/tasks_list.html', {'filter': filter, 'title': 'Task', 'fields': fields})
 
 @login_required
 def newtask(request):
@@ -166,3 +190,21 @@ def edittask(request, id=None):
             form = TaskForm(instance=task)
             return render(request,'progress/edittask.html', {'id': task.id, 'form': form, 'title': 'Task'})
     return HttpResponseRedirect('/dashboard')
+
+@login_required
+def printtask(request):
+    group = request.user.groups.get()
+
+    if group.id == 1 or group.id == 2:
+        filter = TaskAdminFilter(request.GET, queryset=Task.objects.all())
+    else:
+        filter = TaskFilter(request.GET, queryset=Task.objects.filter(user=request.user))
+
+    fields = request.POST.dict()
+    del fields['action']
+    del fields['csrfmiddlewaretoken']
+
+    if group.id == 3:
+        del fields['user']
+
+    return render(request, 'progress/printtask.html', {'filter': filter, 'fields': fields})

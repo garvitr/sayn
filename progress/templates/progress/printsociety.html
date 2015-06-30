@@ -1,0 +1,25 @@
+{% extends "progress/print.html" %}
+{% load app_filter %}
+
+
+{% block thead %}
+<tr>
+  <th>#</th>
+  <th>Name</th>
+  {% for field in fields %}
+  <th>{{ field }}</th>
+  {% endfor %}
+</tr>
+{% endblock %}
+
+{% block tbody %}
+{% for s in filter %}
+<tr>
+  <td>{{ forloop.counter }}</td>
+  <td>{{ s.name }}</td>
+  {% for field in fields %}
+  <td>{{ s|getattribute:field }}</td>
+  {% endfor %}
+</tr>
+{% endfor %}
+{% endblock %}

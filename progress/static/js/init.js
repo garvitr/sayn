@@ -39,6 +39,7 @@
         selectYears: 80,
     });
 
+    $('.modal-trigger').leanModal();
   }); // end of document ready
 })(jQuery); // end of jQuery name space
 

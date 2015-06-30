@@ -98,6 +98,18 @@ class Society(models.Model):
     def get_contact_name(self):
         return "{0} {1}".format(self.contact_firstname, self.contact_lastname)
 
+    def fields(self):
+        fields = self._meta.get_all_field_names()
+        exclude = [
+            'customuser',
+            'id',
+            'name',
+        ]
+        for field in exclude:
+            fields.remove(field)
+
+        return sorted(fields)
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     GENDER = (
         ('M', 'Male'),
@@ -142,6 +154,27 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return "{0} {1}".format(self.first_name, self.last_name)
 
+    def fields(self):
+        fields = self._meta.get_all_field_names()
+        exclude = [
+            'password',
+            'is_staff',
+            'is_superuser',
+            'logentry',
+            'society_id',
+            'last_login',
+            'id',
+            'user_permissions',
+            'first_name',
+            'last_name',
+            'task',
+            'groups',
+        ]
+        for field in exclude:
+            fields.remove(field)
+
+        return sorted(fields)
+
     def __str__(self):
         return self.get_full_name()
 
@@ -169,3 +202,15 @@ class Task(models.Model):
 
     def get_assigned_on(self):
         return self.assigned_on
+
+    def fields(self):
+        fields = self._meta.get_all_field_names()
+        exclude = [
+            'id',
+            'user_id',
+            'name',
+        ]
+        for field in exclude:
+            fields.remove(field)
+
+        return sorted(fields)
