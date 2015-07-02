@@ -78,7 +78,7 @@
       <label for="{{ form.nominated_through.id_for_label }}">{{form.nominated_through.label}}</label>
     </div>
   </div>
-  {% if user|has_group:"SC" %}
+  {% if user|has_group:"SC" or user|has_group:"Administrator" %}
   <div class="row">
     <div class="input-field col s12">
       {{ form.group }}

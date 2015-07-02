@@ -1,0 +1,40 @@
+{% extends "progress/dashboard.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block main %}
+
+{% if form.errors %}
+<div id="form-error">
+  <p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
+  <ul>
+  {% for field in form %}
+  {% if field.errors %}
+  <li>{{ field.label }} - {{ field.errors|striptags }}</li>
+  {% endif %}
+  {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<form method="POST" action="/dashboard/news/new" class="col s12">
+  <div class="row">
+    {% csrf_token %}
+    <div class="row">
+      <div class="input-field col s12">
+        {{ form.title }}
+        <label for="{{ form.title.id_for_label }}">{{form.title.label}}</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12">
+        {{ form.content }}
+        <label for="{{ form.content.id_for_label }}">{{form.content.label}}</label>
+      </div>
+    </div>
+  </div>
+  <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+    <i class="mdi-content-send right"></i>
+  </button>
+</form>
+{% endblock %}

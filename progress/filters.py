@@ -1,6 +1,6 @@
 import django_filters
 from django_filters import DateRangeFilter
-from progress.models import CustomUser, Task
+from progress.models import CustomUser, News, Task
 from progress.widgets import CustomDateInput
 
 class CustomUserFilter(django_filters.FilterSet):
@@ -34,4 +34,13 @@ class TaskAdminFilter(TaskFilter):
             'status',
             'approved',
             'user',
+        ]
+
+class NewsFilter(django_filters.FilterSet):
+    created_on = DateRangeFilter()
+
+    class Meta:
+        model = News
+        fields = [
+            'created_on',
         ]

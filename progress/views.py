@@ -3,14 +3,15 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
-from progress.filters import CustomUserFilter, TaskAdminFilter, TaskFilter
-from progress.forms import RegistrationForm, SocietyForm, UserEditForm , TaskForm
-from progress.models import CustomUser, Society , Task
+from progress.filters import CustomUserFilter, NewsFilter, TaskAdminFilter, TaskFilter
+from progress.forms import NewsForm, RegistrationForm, SocietyForm, UserEditForm , TaskForm
+from progress.models import CustomUser, News, Society, Task
 
 # Create your views here.
 
 def index(request):
-    return render(request, 'progress/index.html')
+    news = News.objects.all().order_by('-created_on')[:5]
+    return render(request, 'progress/index.html', {'news': news})
 
 def login(request):
     # if user is logged in then redirect to the dashboard
@@ -46,7 +47,7 @@ def user(request):
 @login_required
 def newuser(request):
     group = request.user.groups.get()
-    if group.pk == 1:
+    if group.name == 'SC' or group.name == 'Administrator':
         if request.method == "POST":
             form = RegistrationForm(request.POST)
 
@@ -68,7 +69,7 @@ def newuser(request):
 def edituser(request, id=None):
     user = CustomUser.objects.get(id=id)
     group = request.user.groups.get()
-    if group.pk == 1 or user.pk == request.user.pk:
+    if group.name == 'SC' or group.name == 'Administrator' or user.pk == request.user.pk:
         if request.method == "POST":
             form = UserEditForm(request.POST, instance=user)
 
@@ -102,7 +103,7 @@ def society(request):
 def newsociety(request):
     group = request.user.groups.get()
 
-    if group.pk == 1:
+    if group.name == 'SC' or group.name == 'Administrator':
         if request.method == "POST":
             form = SocietyForm(request.POST)
             if form.is_valid():
@@ -120,7 +121,7 @@ def editsociety(request, id=None):
     society = Society.objects.get(id=id)
     group = request.user.groups.get()
 
-    if group.pk == 1 or request.user.society == society:
+    if group.name == 'SC' or group.name == 'Administrator' or request.user.society == society:
         if request.method == "POST":
             form = SocietyForm(request.POST, instance=society)
 
@@ -147,7 +148,7 @@ def printsociety(request):
 def task(request):
     group = request.user.groups.get()
 
-    if group.id == 1 or group.id == 2:
+    if group.name == 'SC' or group.name == 'Administrator' or 'CC' in group.name:
         filter = TaskAdminFilter(request.GET, queryset=Task.objects.all())
     else:
         filter = TaskFilter(request.GET, queryset=Task.objects.filter(user=request.user))
@@ -177,7 +178,7 @@ def edittask(request, id=None):
     task = Task.objects.get(id=id)
     group = request.user.groups.get()
 
-    if group.pk == 1 or request.user == task.user:
+    if group.name == 'SC' or group.name == 'Administrator' or request.user == task.user:
         if request.method == "POST":
             form = TaskForm(request.POST, instance=task)
 
@@ -195,7 +196,7 @@ def edittask(request, id=None):
 def printtask(request):
     group = request.user.groups.get()
 
-    if group.id == 1 or group.id == 2:
+    if group.name == 'SC' or group.name == 'Administrator' or 'CC' in group.name:
         filter = TaskAdminFilter(request.GET, queryset=Task.objects.all())
     else:
         filter = TaskFilter(request.GET, queryset=Task.objects.filter(user=request.user))
@@ -204,7 +205,61 @@ def printtask(request):
     del fields['action']
     del fields['csrfmiddlewaretoken']
 
-    if group.id == 3:
+    if group.name == "Other":
         del fields['user']
 
     return render(request, 'progress/printtask.html', {'filter': filter, 'fields': fields})
+
+@login_required
+def news(request):
+    group = request.user.groups.get()
+
+    if not group.name == 'Administrator':
+        return HttpResponseRedirect('/dashboard/task')
+
+    filter = NewsFilter(request.GET, queryset=News.objects.all())
+
+    return render(request, 'progress/news_list.html', {'filter': filter, 'title': 'News'})
+
+@login_required
+def newnews(request):
+    group = request.user.groups.get()
+
+    if not group.name == 'Administrator':
+        return HttpResponseRedirect('/dashboard/task')
+
+    if request.method == 'POST':
+        form = NewsForm(request.POST)
+
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+            return HttpResponseRedirect('/dashboard/news')
+        else:
+            return render(request, 'progress/newnews.html', {'form': form, 'title': 'News'})
+    else:
+        form = NewsForm()
+        return render(request, 'progress/newnews.html', {'form': form, 'title': 'News'})
+
+@login_required
+def editnews(request, id=None):
+    instance = News.objects.get(id=id)
+    group = request.user.groups.get()
+
+    if not group.name == 'Administrator':
+        return HttpResponseRedirect('/dashboard/task')
+
+    if request.method == 'POST':
+        form = NewsForm(request.POST, instance=instance)
+
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+            return HttpResponseRedirect('/dashboard/news')
+        else:
+            return render(request, 'progress/editnews.html', {'form': form, 'title': 'News', 'id': id})
+    else:
+        form = NewsForm(instance=instance)
+        return render(request, 'progress/editnews.html', {'form': form, 'title': 'News', 'id': id})

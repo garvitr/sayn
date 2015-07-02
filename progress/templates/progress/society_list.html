@@ -8,7 +8,7 @@
   <li>
     <div class="collapsible-header">
       <p><span class="list-name red-text">{{ society.name }}</span>
-        {% if user|has_group:"SC" or user.society == society %}
+        {% if user|has_group:"SC" or user|has_group:"Administrator" or user.society == society %}
         <span class="right">
             <a class="red-text" href="/dashboard/society/{{ society.id }}/edit"><i class="mdi-content-create tiny"></i></a>
             <a class="red-text" href="/dashboard/user?society={{ society.id }}"><i class="mdi-action-account-child tiny"></i></a></span>
@@ -32,7 +32,7 @@
 {% endblock %}
 
 {% block action-btn %}
-{% if user|has_group:"SC" %}
+{% if user|has_group:"SC" or user|has_group:"Administrator" %}
 <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
   <a href="/dashboard/society/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
   <ul>

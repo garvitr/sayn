@@ -194,7 +194,7 @@ class Task(models.Model):
     status = models.IntegerField(choices=STATUS)
     approved = models.BooleanField(default=False, null=False)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
 
     def get_description(self):
@@ -214,3 +214,12 @@ class Task(models.Model):
             fields.remove(field)
 
         return sorted(fields)
+
+class News(models.Model):
+    title = models.CharField(max_length=50)
+    created_on = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(CustomUser)
+    content = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.title

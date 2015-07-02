@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import Group
 from django.forms import DateField, EmailInput, PasswordInput, Select, TextInput, BooleanField
-from progress.models import CustomUser, Society, Task
+from progress.models import CustomUser, News, Society, Task
 from progress.widgets import CustomDateInput
 
 class RegistrationForm(forms.ModelForm):
@@ -122,3 +122,8 @@ class TaskForm(forms.ModelForm):
 
         if cleaned_data['status'] != 2 and cleaned_data['completed_on'] is not None:
             self.add_error('completed_on', 'Task Status not set as completed but Completed On date is set')
+
+class NewsForm(forms.ModelForm):
+    class Meta:
+        model = News
+        exclude = ['user', 'created_on']

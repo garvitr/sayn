@@ -1,0 +1,39 @@
+{% extends "progress/dashboard.html" %}
+{% load app_filter %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<ul class="collapsible popout" data-collapsible="accordion">
+  {% for news in filter %}
+  <li>
+    <div class="collapsible-header">
+      <p><span class="list-name red-text">{{ news.title }}</span>
+        <span class="right">
+            <a class="red-text" href="/dashboard/news/{{ news.id }}/edit"><i class="mdi-content-create tiny"></i></a>
+        </span>
+        <br>
+        <span class="list-property red-text text-lighten-1">{{ news.created_on }}</span>
+      </p>
+    </div>
+    <div class="collapsible-body">
+      <p>{{ news.content }}</p>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block filter %}
+<form method="GET" action="">
+  {{ filter.form.as_p }}
+  <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+    <i class="mdi-content-send right"></i>
+  </button>
+</form>
+{% endblock %}
+
+{% block action-btn %}
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+  <a href="/dashboard/news/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
+</div>
+{% endblock %}

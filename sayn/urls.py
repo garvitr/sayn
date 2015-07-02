@@ -25,4 +25,7 @@ urlpatterns = patterns('',
     url(r'^dashboard/task/new$', views.newtask),
     url(r'^dashboard/task/print$', views.printtask),
     url(r'^dashboard/task/(?P<id>\d+)/edit$',views.edittask),
+    url(r'^dashboard/news$', views.news),
+    url(r'^dashboard/news/new$', views.newnews),
+    url(r'^dashboard/news/(?P<id>\d+)/edit$', views.editnews),
 )
