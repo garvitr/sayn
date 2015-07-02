@@ -153,3 +153,7 @@ a.button-collapse.top-nav.full {
 .btn {
   z-index: 0;
 }
+
+#form-error {
+  padding: 10px;
+}

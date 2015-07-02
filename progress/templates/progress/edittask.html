@@ -1,8 +1,22 @@
 {% extends "progress/dashboard.html" %}
+{% load app_filter %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block main %}
+{% if form.errors %}
+<div id="form-error">
+  <p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
+  <ul>
+  {% for field in form %}
+  {% if field.errors %}
+  <li>{{ field.label }} - {{ field.errors|striptags }}</li>
+  {% endif %}
+  {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
 <form method="POST" action="/dashboard/task/{{ id }}/edit" class="col s12">
   <div class="row">
     {% csrf_token %}
@@ -11,13 +25,7 @@
       <label for="{{ form.name.id_for_label }}">{{form.name.label}}</label>
     </div>
   </div>
-  <!-- <div class="row">
-    <div class="input-field col s12">
-      {{ form.user }}
-      <label for="{{ form.user.id_for_label }}">{{form.user.label}}</label>
-    </div>
-  </div> -->
-  <div class="row">
+ <div class="row">
     <div class="input-field col s12">
       {{ form.description }}
       <label for="{{ form.description.id_for_label }}">{{form.description.label}}</label>
@@ -41,6 +49,14 @@
       <label for="{{ form.completed_on.id_for_label }}">{{form.completed_on.label}}</label>
     </div>
   </div>
+  {% if user|has_group:"SC" and form.status.value == 2 %}
+  <div class="row">
+    <div class="input-field col s12">
+      {{ form.approved }}
+      <label for="{{ form.approved.id_for_label }}">{{form.approved.label}}</label>
+    </div>
+  </div>
+  {% endif %}
   <button class="btn waves-effect waves-light" type="submit" name="action">Submit
     <i class="mdi-content-send right"></i>
   </button>

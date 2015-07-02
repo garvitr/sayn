@@ -3,6 +3,19 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block main %}
+{% if form.errors %}
+<div id="form-error">
+  <p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
+  <ul>
+  {% for field in form %}
+  {% if field.errors %}
+  <li>{{ field.label }} - {{ field.errors|striptags }}</li>
+  {% endif %}
+  {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
 <form method="POST" action="/dashboard/society/new" class="col s12">
   <div class="row">
     <div class="input-field col s12">

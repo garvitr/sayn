@@ -58,7 +58,7 @@ class RegistrationForm(forms.ModelForm):
 class UserEditForm(RegistrationForm):
     class Meta:
         model = CustomUser
-        exclude = ['is_active', 'password']
+        exclude = ['password']
 
     def __init__(self, *args, **kwargs):
         if 'instance' in kwargs:
@@ -87,7 +87,7 @@ class TaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        exclude = ['user', 'approved']
+        exclude = ['user']
 
         labels = {
             'name':'Task name',
@@ -97,3 +97,28 @@ class TaskForm(forms.ModelForm):
             'status': 'Task Status',
             'approved':'Approve Task'
         }
+
+    def __init__(self, *args, **kwargs):
+        super(TaskForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.status == 2:
+            self.fields['completed_on'].widget.attrs['disabled'] = True
+
+    def clean_completed_on(self):
+        instance = getattr(self, 'instance', None)
+        if instance and instance.status == 2:
+            return instance.completed_on
+        return self.cleaned_data['completed_on']
+
+    def clean(self):
+        cleaned_data = super(TaskForm, self).clean()
+        instance = getattr(self, 'instance', None)
+
+        if instance and instance.status == 2 and cleaned_data['status'] != 2:
+            cleaned_data['completed_on'] = None
+
+        if cleaned_data['status'] == 2 and cleaned_data['completed_on'] is None:
+            self.add_error('completed_on', 'Task Status set as completed but Completed On date not mentioned')
+
+        if cleaned_data['status'] != 2 and cleaned_data['completed_on'] is not None:
+            self.add_error('completed_on', 'Task Status not set as completed but Completed On date is set')
