@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 
 # Create your models here.
@@ -99,7 +100,7 @@ class Society(models.Model):
         return "{0} {1}".format(self.contact_firstname, self.contact_lastname)
 
     def fields(self):
-        fields = self._meta.get_all_field_names()
+        fields = [f.name for f in self._meta.get_fields()]
         exclude = [
             'customuser',
             'id',
@@ -108,7 +109,7 @@ class Society(models.Model):
         for field in exclude:
             fields.remove(field)
 
-        return sorted(fields)
+        return fields
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     GENDER = (
@@ -151,17 +152,23 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         'nominated_through',
     ]
 
+    @property
+    def completed_tasks(self):
+        total = Task.objects.filter(user=self).count()
+        completed = Task.objects.filter(user=self, status=2).count()
+
+        return '{0}/{1}'.format(completed, total)
+
     def get_full_name(self):
         return "{0} {1}".format(self.first_name, self.last_name)
 
     def fields(self):
-        fields = self._meta.get_all_field_names()
+        fields = [f.name for f in self._meta.get_fields()]
         exclude = [
             'password',
             'is_staff',
             'is_superuser',
             'logentry',
-            'society_id',
             'last_login',
             'id',
             'user_permissions',
@@ -173,7 +180,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         for field in exclude:
             fields.remove(field)
 
-        return sorted(fields)
+        fields.append('completed_tasks')
+        return fields
 
     def __str__(self):
         return self.get_full_name()
@@ -204,16 +212,24 @@ class Task(models.Model):
         return self.assigned_on
 
     def fields(self):
-        fields = self._meta.get_all_field_names()
+        fields = [f.name for f in self._meta.get_fields()]
         exclude = [
             'id',
-            'user_id',
             'name',
         ]
         for field in exclude:
             fields.remove(field)
 
-        return sorted(fields)
+        return fields
+
+    def save(self):
+        if self.id:
+            old = Task.objects.get(pk=self.id)
+            if old.status != 2 and self.status == 2:
+                subject = 'Task "{0}" completed by {1}'.format(self.name, self.user)
+                content = '{0} of {1} has completed the "{2}" task. You may approve the task by visiting '
+                #send_mail()
+        super(Foo, self).save()
 
 class News(models.Model):
     title = models.CharField(max_length=50)

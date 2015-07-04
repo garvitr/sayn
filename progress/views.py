@@ -97,7 +97,7 @@ def society(request):
     societies = Society.objects.all().order_by('name')
     s = Society()
     fields = s.fields()
-    return render(request, 'progress/society_list.html', {'societies': societies, 'title': 'Societies', 'fields': fields})
+    return render(request, 'progress/society_list.html', {'societies': societies, 'title': 'National Societies', 'fields': fields})
 
 @login_required
 def newsociety(request):
@@ -110,10 +110,10 @@ def newsociety(request):
                 form.save()
                 return HttpResponseRedirect('/dashboard/society', {'success': 'Society Added'})
             else:
-                return render(request, 'progress/newsociety.html', {'form': form, 'title': 'Societies'})
+                return render(request, 'progress/newsociety.html', {'form': form, 'title': 'National Societies'})
         else:
             form = SocietyForm()
-            return render(request, 'progress/newsociety.html', {'form': form, 'title': 'Societies'})
+            return render(request, 'progress/newsociety.html', {'form': form, 'title': 'National Societies'})
     return HttpResponseRedirect('/dashboard/society')
 
 @login_required
@@ -129,10 +129,10 @@ def editsociety(request, id=None):
                 form.save()
                 return HttpResponseRedirect('/dashboard/society', {'success': 'Society Updated'})
             else:
-                return render(request, 'progress/editsociety.html', {'id': society.id, 'form': form, 'title': 'Societies'})
+                return render(request, 'progress/editsociety.html', {'id': society.id, 'form': form, 'title': 'National Societies'})
         else:
             form = SocietyForm(instance=society)
-            return render(request,'progress/editsociety.html', {'id': society.id, 'form': form, 'title': 'Societies'})
+            return render(request,'progress/editsociety.html', {'id': society.id, 'form': form, 'title': 'National Societies'})
     return HttpResponseRedirect('/dashboard/society')
 
 @login_required
@@ -155,7 +155,7 @@ def task(request):
 
     t = Task()
     fields = t.fields()
-    return render(request, 'progress/tasks_list.html', {'filter': filter, 'title': 'Task', 'fields': fields})
+    return render(request, 'progress/tasks_list.html', {'filter': filter, 'title': 'Tasks', 'fields': fields})
 
 @login_required
 def newtask(request):
@@ -170,7 +170,7 @@ def newtask(request):
             return render(request, 'progress/newtask.html', {'form': form, 'title': 'Task'})
     else:
         form = TaskForm()
-        return render(request, 'progress/newtask.html', {'form': form, 'title': 'Task'})
+        return render(request, 'progress/newtask.html', {'form': form, 'title': 'Tasks'})
 
 
 @login_required
@@ -189,7 +189,7 @@ def edittask(request, id=None):
                 return render(request, 'progress/edittask.html', {'id': task.id, 'form': form, 'title': 'Task'})
         else:
             form = TaskForm(instance=task)
-            return render(request,'progress/edittask.html', {'id': task.id, 'form': form, 'title': 'Task'})
+            return render(request,'progress/edittask.html', {'id': task.id, 'form': form, 'title': 'Tasks'})
     return HttpResponseRedirect('/dashboard')
 
 @login_required
