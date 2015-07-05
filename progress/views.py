@@ -49,7 +49,10 @@ def newuser(request):
     group = request.user.groups.get()
     if group.name == 'SC' or group.name == 'Administrator':
         if request.method == "POST":
-            form = RegistrationForm(request.POST)
+            if group.name == 'Administrator':
+                form = RegistrationForm(request.POST, admin=True)
+            else:
+                form = RegistrationForm(request.POST, admin=False)
 
             if form.is_valid():
                 # Save the User
@@ -60,7 +63,10 @@ def newuser(request):
             else:
                 return render(request, 'progress/newuser.html', {'form': form, 'title': 'Users'})
         else:
-            form = RegistrationForm()
+            if group.name == 'Administrator':
+                form = RegistrationForm(admin=True)
+            else:
+                form = RegistrationForm(admin=False)
             return render(request,'progress/newuser.html', {'form': form, 'title': 'Users'})
     else:
         return HttpResponseRedirect('/dashboard/user')
@@ -71,7 +77,10 @@ def edituser(request, id=None):
     group = request.user.groups.get()
     if group.name == 'SC' or group.name == 'Administrator' or user.pk == request.user.pk:
         if request.method == "POST":
-            form = UserEditForm(request.POST, instance=user)
+            if group.name == 'Administrator':
+                form = UserEditForm(request.POST, instance=user, admin=True)
+            else:
+                form = UserEditForm(request.POST, instance=user, admin=False)
 
             if form.is_valid():
                 form.save()
@@ -79,7 +88,11 @@ def edituser(request, id=None):
             else:
                 return render(request, 'progress/edituser.html', {'id': user.id, 'form': form, 'title': 'Users'})
         else:
-            form = UserEditForm(instance=user)
+            if group.name == 'Administrator':
+                form = UserEditForm(instance=user)
+                form = UserEditForm(instance=user, admin=True)
+            else:
+                form = UserEditForm(instance=user, admin=False)
             return render(request,'progress/edituser.html', {'id': user.id, 'form': form, 'title': 'Users'})
     return HttpResponseRedirect('/dashboard/user')
 

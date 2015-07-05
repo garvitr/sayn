@@ -5,9 +5,16 @@ from progress.models import CustomUser, News, Society, Task
 from progress.widgets import CustomDateInput
 
 class RegistrationForm(forms.ModelForm):
+    GROUPS = (
+        (1, 'Administrator'),
+        (2, 'SC'),
+        (3, 'CC1'),
+        (4, 'CC2'),
+        (5, 'Other')
+    )
     date_of_birth = DateField(input_formats=['%d %B, %Y'], widget=CustomDateInput(attrs={'class': 'datepicker'}, format='%d %B, %Y'))
     nominated_on = DateField(input_formats=['%d %B, %Y'], widget=CustomDateInput(attrs={'class': 'datepicker'}, format='%d %B, %Y'))
-    group = forms.ModelChoiceField(queryset=Group.objects.all(), required=True)
+    group = forms.ChoiceField(choices=GROUPS, required=True)
 
     class Meta:
         model = CustomUser
@@ -36,6 +43,13 @@ class RegistrationForm(forms.ModelForm):
             'nominated_through': 'Nominated Through',
             'society': 'Society',
         }
+
+    def __init__(self, *args, **kwargs):
+        admin = kwargs.pop('admin', False)
+        super(RegistrationForm, self).__init__(*args, **kwargs)
+
+        if not admin:
+            self.fields['group'].choices = self.GROUPS[1:]
 
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)
@@ -67,7 +81,11 @@ class UserEditForm(RegistrationForm):
                 initial['group'] = kwargs['instance'].groups.get()
             except:
                 pass
+        admin = kwargs.pop('admin', False)
         super(UserEditForm, self).__init__(*args, **kwargs)
+
+        if not admin:
+            self.fields['group'].choices = self.GROUPS[1:]
 
 class SocietyForm(forms.ModelForm):
     class Meta:
