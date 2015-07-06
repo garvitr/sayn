@@ -56,9 +56,7 @@ def newuser(request):
 
             if form.is_valid():
                 # Save the User
-                instance = form.save(commit=False)
-                instance.password = make_password(form.cleaned_data['password'])
-                instance.save()
+                form.save()
                 return HttpResponseRedirect('/dashboard/user', {'success', 'User Created Successfully'})
             else:
                 return render(request, 'progress/newuser.html', {'form': form, 'title': 'Users'})
@@ -89,7 +87,6 @@ def edituser(request, id=None):
                 return render(request, 'progress/edituser.html', {'id': user.id, 'form': form, 'title': 'Users'})
         else:
             if group.name == 'Administrator':
-                form = UserEditForm(instance=user)
                 form = UserEditForm(instance=user, admin=True)
             else:
                 form = UserEditForm(instance=user, admin=False)

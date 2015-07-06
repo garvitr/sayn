@@ -3,6 +3,8 @@ from django.contrib.auth.models import Group
 from django.forms import DateField, EmailInput, PasswordInput, Select, TextInput, BooleanField
 from progress.models import CustomUser, News, Society, Task
 from progress.widgets import CustomDateInput
+from django.contrib.auth.hashers import make_password
+
 
 class RegistrationForm(forms.ModelForm):
     GROUPS = (
@@ -48,8 +50,47 @@ class RegistrationForm(forms.ModelForm):
         admin = kwargs.pop('admin', False)
         super(RegistrationForm, self).__init__(*args, **kwargs)
 
-        if not admin:
+        if admin == False:
             self.fields['group'].choices = self.GROUPS[1:]
+        else:
+            self.fields['group'].choices = self.GROUPS
+
+    def save(self, commit=True):
+        instance = super(RegistrationForm, self).save(commit=False)
+
+        def save_m2m():
+            instance.groups.clear()
+            instance.groups.add(self.cleaned_data['group'])
+
+        self.save_m2m = save_m2m
+
+        if commit:
+            instance.password = make_password(self.cleaned_data['password'])
+            instance.save()
+            self.save_m2m()
+
+        return instance
+
+
+class UserEditForm(RegistrationForm):
+    class Meta:
+        model = CustomUser
+        exclude = ['password']
+
+    def __init__(self, *args, **kwargs):
+        if 'instance' in kwargs:
+            initial = kwargs.setdefault('initial', {})
+            try:
+                initial['group'] = kwargs['instance'].groups.get().id
+            except:
+                pass
+        admin = kwargs.pop('admin', False)
+        super(UserEditForm, self).__init__(*args, **kwargs)
+
+        if admin == False:
+            self.fields['group'].choices = self.GROUPS[1:]
+        else:
+            self.fields['group'].choices = self.GROUPS
 
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)
@@ -67,25 +108,6 @@ class RegistrationForm(forms.ModelForm):
             self.save_m2m()
 
         return instance
-
-
-class UserEditForm(RegistrationForm):
-    class Meta:
-        model = CustomUser
-        exclude = ['password']
-
-    def __init__(self, *args, **kwargs):
-        if 'instance' in kwargs:
-            initial = kwargs.setdefault('initial', {})
-            try:
-                initial['group'] = kwargs['instance'].groups.get()
-            except:
-                pass
-        admin = kwargs.pop('admin', False)
-        super(UserEditForm, self).__init__(*args, **kwargs)
-
-        if not admin:
-            self.fields['group'].choices = self.GROUPS[1:]
 
 class SocietyForm(forms.ModelForm):
     class Meta:
