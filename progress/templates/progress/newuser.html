@@ -17,7 +17,7 @@
 </div>
 {% endif %}
 
-<form method="POST" action="/dashboard/user/new" class="col s12">
+<form method="POST" enctype="multipart/form-data" action="/dashboard/user/new" class="col s12">
   <div class="row">
     {% csrf_token %}
     <div class="input-field col s6">
@@ -87,6 +87,16 @@
       <label for="{{ form.group.id_for_label }}">{{ form.group.label }}</label>
     </div>
   </div>
+  <div class="row">
+    <div class="file-field input-field col s12">
+      <input class="file-path validate" type="text" />
+      <div class="btn">
+        <span>Image</span>
+        {{ form.avatar }}
+      </div>
+    </div>
+  </div>
+
   <button class="btn waves-effect waves-light" type="submit" name="action">Submit
     <i class="mdi-content-send right"></i>
   </button>

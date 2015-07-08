@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import Group
-from django.forms import DateField, EmailInput, PasswordInput, Select, TextInput, BooleanField
+from django.forms import DateField, EmailInput, PasswordInput, Select, TextInput, BooleanField, FileInput
 from progress.models import CustomUser, News, Society, Task
 from progress.widgets import CustomDateInput
 from django.contrib.auth.hashers import make_password
@@ -76,6 +76,9 @@ class UserEditForm(RegistrationForm):
     class Meta:
         model = CustomUser
         exclude = ['password']
+        widgets = {
+            'avatar': FileInput()
+        }
 
     def __init__(self, *args, **kwargs):
         if 'instance' in kwargs:

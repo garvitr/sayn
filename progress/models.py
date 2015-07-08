@@ -136,6 +136,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     nominated_through = models.CharField(max_length=20)
     is_active = models.BooleanField(default=True, null=False)
     is_staff = models.BooleanField(default=False, null=False)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     objects = UserManager()
     USERNAME_FIELD = 'email'

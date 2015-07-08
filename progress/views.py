@@ -50,9 +50,9 @@ def newuser(request):
     if group.name == 'SC' or group.name == 'Administrator':
         if request.method == "POST":
             if group.name == 'Administrator':
-                form = RegistrationForm(request.POST, admin=True)
+                form = RegistrationForm(request.POST, request.FILES, admin=True)
             else:
-                form = RegistrationForm(request.POST, admin=False)
+                form = RegistrationForm(request.POST, request.FILES, admin=False)
 
             if form.is_valid():
                 # Save the User
@@ -76,9 +76,9 @@ def edituser(request, id=None):
     if group.name == 'SC' or group.name == 'Administrator' or user.pk == request.user.pk:
         if request.method == "POST":
             if group.name == 'Administrator':
-                form = UserEditForm(request.POST, instance=user, admin=True)
+                form = UserEditForm(request.POST, request.FILES, instance=user, admin=True)
             else:
-                form = UserEditForm(request.POST, instance=user, admin=False)
+                form = UserEditForm(request.POST, request.FILES, instance=user, admin=False)
 
             if form.is_valid():
                 form.save()

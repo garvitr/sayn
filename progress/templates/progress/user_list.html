@@ -1,5 +1,6 @@
 {% extends "progress/dashboard.html" %}
 {% load app_filter %}
+{% load staticfiles %}
 
 {% block title %}{{ title }}{% endblock %}
 {% block main %}
@@ -7,7 +8,13 @@
   {% for user in filter %}
   <li>
     <div class="collapsible-header">
-      <p><span class="list-name red-text">{{ user.get_full_name }}</span>
+      <p>
+      {% if user.avatar %}
+      <img src="{{ user.avatar.url }}" class="circle">
+      {% else %}
+      <img src="{% static "default_avatar.jpg" %}" class="circle">
+      {% endif %}
+      <span class="list-name red-text">{{ user.get_full_name }}</span>
         {% if curr_user|has_group:"SC" or curr_user|has_group:"Administrator" or user == curr_user %}
         <span class="right">
             <a class="red-text" href="/dashboard/user/{{ user.id }}/edit"><i class="mdi-content-create tiny"></i></a>

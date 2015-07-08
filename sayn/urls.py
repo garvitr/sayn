@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 from django.contrib import admin
 from progress import views
 
@@ -28,4 +30,4 @@ urlpatterns = patterns('',
     url(r'^dashboard/news$', views.news),
     url(r'^dashboard/news/new$', views.newnews),
     url(r'^dashboard/news/(?P<id>\d+)/edit$', views.editnews),
-)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

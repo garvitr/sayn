@@ -92,3 +92,6 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'progress.CustomUser'
 
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request', )
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

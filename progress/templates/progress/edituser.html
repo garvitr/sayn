@@ -18,7 +18,7 @@
 </div>
 {% endif %}
 
-<form method="POST" action="/dashboard/user/{{ id }}/edit" class="col s12">
+<form method="POST" enctype="multipart/form-data" action="/dashboard/user/{{ id }}/edit" class="col s12">
   <div class="row">
     {% csrf_token %}
     <div class="input-field col s6">
@@ -76,6 +76,16 @@
     <div class="input-field col s6">
       {{ form.nominated_through }}
       <label for="{{ form.nominated_through.id_for_label }}">{{form.nominated_through.label}}</label>
+    </div>
+  </div>
+  <div class="row">
+    <img id="avatar" class="circle" src="{{ form.avatar.value.url }}">
+    <div class="file-field input-field col s12">
+      <input class="file-path validate" placeholder="{{ form.avatar.value }}" type="text" />
+      <div class="btn">
+        <span>Image</span>
+        {{ form.avatar }}
+      </div>
     </div>
   </div>
   {% if user|has_group:"SC" or user|has_group:"Administrator" %}
