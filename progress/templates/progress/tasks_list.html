@@ -16,6 +16,7 @@
         <br>
         <span class="list-property red-text text-lighten-1">Assigned On: {{ task.get_assigned_on }}</span>
         <span class="list-property red-text text-lighten-1">Status: {{ task.get_status_display }}</span>
+        <span class="list-property red-text text-lighten-1">User: {{ task.user }}</span>
         {% if task.status == 2 %}
         <span class="list-property red-text text-lighten-1">Completed On: {{ task.completed_on }}</span>
         {% endif %}

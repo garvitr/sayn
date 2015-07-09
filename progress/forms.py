@@ -160,10 +160,10 @@ class TaskForm(forms.ModelForm):
         if instance and instance.status == 2 and cleaned_data['status'] != 2:
             cleaned_data['completed_on'] = None
 
-        if cleaned_data['status'] == 2 and cleaned_data['completed_on'] is None:
+        if 'status' in cleaned_data and cleaned_data['status'] == 2 and cleaned_data['completed_on'] is None:
             self.add_error('completed_on', 'Task Status set as completed but Completed On date not mentioned')
 
-        if cleaned_data['status'] != 2 and cleaned_data['completed_on'] is not None:
+        if 'status' in cleaned_data and cleaned_data['status'] != 2 and cleaned_data['completed_on'] is not None:
             self.add_error('completed_on', 'Task Status not set as completed but Completed On date is set')
 
 class NewsForm(forms.ModelForm):
