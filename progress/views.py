@@ -1,9 +1,11 @@
+from copy import deepcopy
 from django.http import JsonResponse
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
 from progress.filters import CustomUserFilter, NewsFilter, TaskAdminFilter, TaskFilter
 from progress.forms import NewsForm, RegistrationForm, SocietyForm, UserEditForm , TaskForm
 from progress.models import CustomUser, News, Society, Task
@@ -191,13 +193,20 @@ def newtask(request):
 def edittask(request, id=None):
     task = Task.objects.get(id=id)
     group = request.user.groups.get()
+    old = deepcopy(task)
 
     if group.name == 'SC' or group.name == 'Administrator' or request.user == task.user:
         if request.method == "POST":
             form = TaskForm(request.POST, instance=task)
-
             if form.is_valid():
-                form.save()
+                instance = form.save(commit=False)
+                if old.status != 2 and instance.status == 2:
+                    subject = 'Task "{0}" completed by {1}'.format(instance.name, instance.user)
+                    url = request.build_absolute_uri('/dashboard/task/{0}/edit'.format(id))
+                    content = '{0} of {1} has completed the "{2}" task. You may approve the task by visiting {3}.\n\nPlease ignore this if the task has already been approved.\n\n-\nSAYN Progress Monitor'.format(instance.user, instance.user.society, instance.name, url)
+                    recipients = [user.email for user in CustomUser.objects.filter(groups__id__in=[1, 2])]
+                    send_mail(subject, content, 'sayn@gmail.com', recipients)
+                instance.save()
                 return HttpResponseRedirect('/dashboard/task', {'success': 'Task Updated'})
             else:
                 return render(request, 'progress/edittask.html', {'id': task.id, 'form': form, 'title': 'Task'})

@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.core.mail import send_mail
 from django.core.validators import RegexValidator
 
 # Create your models here.
@@ -222,15 +221,6 @@ class Task(models.Model):
             fields.remove(field)
 
         return fields
-
-    def save(self):
-        if self.id:
-            old = Task.objects.get(pk=self.id)
-            if old.status != 2 and self.status == 2:
-                subject = 'Task "{0}" completed by {1}'.format(self.name, self.user)
-                content = '{0} of {1} has completed the "{2}" task. You may approve the task by visiting '
-                #send_mail()
-        super(Task, self).save()
 
 class News(models.Model):
     title = models.CharField(max_length=50)
