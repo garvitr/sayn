@@ -10,8 +10,8 @@
       <p><span class="list-name red-text">{{ society.name }}</span>
         {% if user|has_group:"SC" or user|has_group:"Administrator" or user.society == society %}
         <span class="right">
-            <a class="red-text" href="/dashboard/society/{{ society.id }}/edit"><i class="mdi-content-create tiny"></i></a>
-            <a class="red-text" href="/dashboard/user?society={{ society.id }}"><i class="mdi-action-account-child tiny"></i></a></span>
+            <a class="red-text" href="/dashboard/society/{{ society.id }}/edit"><i class="tooltipped mdi-content-create tiny" data-position="top" data-delay="50" data-tooltip="Edit National Society" ></i></a>
+            <a class="red-text" href="/dashboard/user?society={{ society.id }}"><i class="tooltipped mdi-action-account-child tiny" data-position="top" data-delay="50" data-tooltip="List Users of this society" ></i></a></span>
         {% endif %}
         <br>
         {% for user in society.customuser_set.all %}<span class="list-property red-text text-lighten-1">{{ user.get_full_name }}</span>{% endfor %}
@@ -34,9 +34,9 @@
 {% block action-btn %}
 {% if user|has_group:"SC" or user|has_group:"Administrator" %}
 <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-  <a href="/dashboard/society/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
+  <a href="/dashboard/society/new" class="btn-floating btn-large waves-effect waves-light red "><i class="tooltipped mdi-content-add" data-position="left" data-delay="50" data-tooltip="Add and Print option" ></i></a>
   <ul>
-    <li><a class="btn-floating blue modal-trigger" href="#print"><i class="material-icons">print</i></a></li>
+    <li><a class="btn-floating blue modal-trigger" href="#print"><i class="tooltipped material-icons" data-position="top" data-delay="50" data-tooltip="Print">print</i></a></li>
   </ul>
 </div>
 {% else %}

@@ -10,7 +10,11 @@
       if(request) {
         request.abort();
       }
-
+    
+    $(document).ready(function(){
+      $('.tooltipped').tooltip({delay: 50});
+    });
+      
       $('#loader').attr('class', 'preloader-wrapper small active');
 
       var $form = $(this);
