@@ -17,15 +17,23 @@
       <span class="list-name red-text">{{ user.get_full_name }}</span>
         {% if curr_user|has_group:"SC" or curr_user|has_group:"Administrator" or user == curr_user %}
         <span class="right">
-            <a class="red-text" href="/dashboard/user/{{ user.id }}/edit"><i class="mdi-content-create tiny"></i></a>
-            <a class="red-text" href="/dashboard/task?user={{ user.id }}"><i class="mdi-editor-format-list-numbered tiny"></i></a></span>
+            <a class="red-text" href="/dashboard/user/{{ user.id }}/edit"><i class="tooltipped mdi-content-create tiny" data-position="top" data-delay="50" data-tooltip="Edit User" ></i></a>
+            <a class="red-text" href="/dashboard/task?user={{ user.id }}"><i class=" tooltipped mdi-editor-format-list-numbered tiny" data-position="top" data-delay="50" data-tooltip="List Task"></i></a></span>
         {% endif %}
         <br>
         <span class="list-property red-text text-lighten-1">{{ user.society }}</span><span class="list-property red-text text-lighten-1">{{ user.role|title }}</span><span class="list-property red-text text-lighten-1">{{ user.completed_tasks }} tasks completed</span>
       </p>
     </div>
     <div class="collapsible-body">
-      <p>Remaining Details Here</p>
+      <p>
+        Email : {{user.email}}<br>
+        Position : {{user.position}}<br>
+        Contact Number : {{user.contact_number}}<br>
+        Nominated On : {{user.nominated_on}}<br>
+        Nominated Through : {{user.nominated_through}}<br>
+        Is an Active Member : {{user.is_active}}<br>
+        Is a Staff Member : {{user.is_staff}}<br>
+      </p>
     </div>
   </li>
   {% endfor %}
@@ -44,9 +52,9 @@
 {% block action-btn %}
 {% if user|has_group:"SC" or user|has_group:"Administrator" %}
 <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-  <a href="/dashboard/user/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
+  <a href="/dashboard/user/new" class="btn-floating btn-large waves-effect waves-light red "><i class="tooltipped mdi-content-add" data-position="left" data-delay="50" data-tooltip="Add and Print option"></i></a>
   <ul>
-    <li><a class="btn-floating blue modal-trigger" href="#print"><i class="material-icons">print</i></a></li>
+    <li><a class="btn-floating blue modal-trigger" href="#print"><i class="tooltipped material-icons" data-position="top" data-delay="50" data-tooltip="Print">print</i></a></li>
   </ul>
 </div>
 {% else %}

@@ -10,7 +10,7 @@
       <p><span class="list-name red-text">{{ task.name }}</span>
         {% if task.user == user or user|has_group:"SC" or user|has_group:"Administrator" %}
         <span class="right">
-            <a class="red-text" href="/dashboard/task/{{ task.id }}/edit"><i class="mdi-content-create tiny"></i></a>
+            <a class="red-text" href="/dashboard/task/{{ task.id }}/edit"><i class="tooltipped mdi-content-create tiny" data-position="top" data-delay="50" data-tooltip="Edit Task"></i></a>
         </span>
         {% endif %}
         <br>
@@ -41,9 +41,9 @@
 
 {% block action-btn %}
 <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-  <a href="/dashboard/task/new" class="btn-floating btn-large waves-effect waves-light red "><i class="mdi-content-add"></i></a>
+  <a href="/dashboard/task/new" class="btn-floating btn-large waves-effect waves-light red "><i class="tooltipped mdi-content-add" data-position="left" data-delay="50" data-tooltip="Add and Print option"></i></a>
   <ul>
-    <li><a class="btn-floating blue modal-trigger" href="#print"><i class="material-icons">print</i></a></li>
+    <li><a class="btn-floating blue modal-trigger" href="#print"><i class="tooltipped material-icons" data-position="top" data-delay="50" data-tooltip="Print">print</i></a></li>
   </ul>
 </div>
 
