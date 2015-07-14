@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import make_password
 from progress.filters import CustomUserFilter, NewsFilter, TaskAdminFilter, TaskFilter
 from progress.forms import NewsForm, RegistrationForm, SocietyForm, UserEditForm , TaskForm
@@ -98,8 +99,11 @@ def printuser(request):
     group = request.user.groups.get()
     filter = CustomUserFilter(request.GET, queryset=CustomUser.objects.all().order_by('first_name', 'last_name'))
     fields = request.POST.dict()
-    del fields['action']
-    del fields['csrfmiddlewaretoken']
+    remove = ['action', 'csrfmiddlewaretoken', 'password']
+    for entry in remove:
+        if entry in fields:
+            del fields[entry]
+
     return render(request, 'progress/printuser.html', {'filter': filter, 'fields': fields})
 
 @login_required
@@ -273,3 +277,17 @@ def editnews(request, id=None):
     else:
         form = NewsForm(instance=instance)
         return render(request, 'progress/editnews.html', {'form': form, 'title': 'News', 'id': id})
+
+@login_required
+def changepassword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            auth.update_session_auth_hash(request, form.user)
+            return HttpResponseRedirect('/dashboard/user')
+        else:
+            return render(request, 'progress/changepassword.html', {'form': form})
+    else:
+        form = PasswordChangeForm(user=request.user)
+        return render(request, 'progress/changepassword.html', {'form': form})

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import password_reset, password_reset_confirm, password_reset_complete, password_reset_done
 from progress import views
 
 urlpatterns = patterns('',
@@ -13,6 +14,22 @@ urlpatterns = patterns('',
     url(r'^$', views.index),
     url(r'^login$', views.login),
     url(r'^logout$', views.logout),
+    url(r'^password/reset$', password_reset, {
+        'template_name': 'progress/password_reset_form.html',
+        'post_reset_redirect': '/password/reset/done'
+    }),
+    url(r'^password/reset/done$', password_reset_done, {
+        'template_name': 'progress/password_reset_done.html',
+    }),
+    url(r'^password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+        password_reset_confirm,
+        {
+            'template_name': 'progress/password_reset_confirm.html',
+            'post_reset_redirect' : '/password/done'
+        },
+        name='password_reset_confirm'
+    ),
+    url(r'^password/done/$', password_reset_complete, {'template_name': 'progress/password_reset_complete.html'}),
     url(r'^dashboard$', views.dashboard),
     url(r'^dashboard/$', views.dashboard),
     url(r'^dashboard/society$', views.society),
@@ -30,4 +47,5 @@ urlpatterns = patterns('',
     url(r'^dashboard/news$', views.news),
     url(r'^dashboard/news/new$', views.newnews),
     url(r'^dashboard/news/(?P<id>\d+)/edit$', views.editnews),
+    url(r'^dashboard/user/changepassword$', views.changepassword),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
