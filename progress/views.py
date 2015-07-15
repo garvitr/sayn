@@ -1,6 +1,7 @@
 from copy import deepcopy
 from django.http import JsonResponse
 from django.shortcuts import render, HttpResponseRedirect
+from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
@@ -205,7 +206,7 @@ def edittask(request, id=None):
                     url = request.build_absolute_uri('/dashboard/task/{0}/edit'.format(id))
                     content = '{0} of {1} has completed the "{2}" task. You may approve the task by visiting {3}.\n\nPlease ignore this if the task has already been approved.\n\n-\nSAYN Progress Monitor'.format(instance.user, instance.user.society, instance.name, url)
                     recipients = [user.email for user in CustomUser.objects.filter(groups__id__in=[1, 2])]
-                    send_mail(subject, content, 'sayn@gmail.com', recipients)
+                    send_mail(subject, content, settings.EMAIL_HOST_USER, recipients)
                 instance.save()
                 return HttpResponseRedirect('/dashboard/task', {'success': 'Task Updated'})
             else:
